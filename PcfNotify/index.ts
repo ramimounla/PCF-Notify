@@ -2,6 +2,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
 
 export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
+	private _inputElement: HTMLInputElement;
 	/**
 	 * Empty constructor.
 	 */
@@ -21,6 +22,10 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
 	{
 		// Add control initialization code
+		this._inputElement = document.createElement("input");
+		this._inputElement.value = context.parameters.inputProperty.raw || "";
+
+		container.appendChild(this._inputElement);
 	}
 
 
@@ -31,6 +36,7 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	public updateView(context: ComponentFramework.Context<IInputs>): void
 	{
 		// Add code to update control view
+		this._inputElement.value = context.parameters.inputProperty.raw || "";
 	}
 
 	/** 
