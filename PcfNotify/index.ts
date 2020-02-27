@@ -5,6 +5,7 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	private _inputElement: HTMLInputElement;
 	private _notifyOutputChanged: () => void;
 	private _inputChanged: EventListenerOrEventListenerObject;
+	private _value: string | null;
 
 	/**
 	 * Empty constructor.
@@ -24,7 +25,11 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement) {
 		// Add control initialization code
 		this._inputElement = document.createElement("input");
-		this._inputElement.value = context.parameters.inputProperty.raw || "";
+		
+		this._value = context.parameters.inputProperty.raw;
+
+		this._inputElement.value = this._value || "";
+
 		container.appendChild(this._inputElement);
 
 		this._notifyOutputChanged = notifyOutputChanged;
@@ -40,7 +45,8 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
 		// Add code to update control view
-		this._inputElement.value = context.parameters.inputProperty.raw || "";
+		this._value = context.parameters.inputProperty.raw;
+		this._inputElement.value = this._value || "";
 		this._notifyOutputChanged();
 	}
 
@@ -53,6 +59,7 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	}
 
 	public inputChanged(evt: Event): void {
+		this._value = this._inputElement.value;
 		this._notifyOutputChanged();
 	}
 

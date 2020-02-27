@@ -9,6 +9,9 @@
 # output directory
 /out
 
+# solution directory
+/solution
+
 # msbuild output directories
 /bin
 /obj
