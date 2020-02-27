@@ -5,8 +5,7 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	private _inputElement: HTMLInputElement;
 	private _notifyOutputChanged: () => void;
 	private _inputChanged: EventListenerOrEventListenerObject;
-	private _value: string | null;
-	private _context: ComponentFramework.Context<IInputs>;
+	private _value: string;
 
 	/**
 	 * Empty constructor.
@@ -27,17 +26,16 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 		// Add control initialization code
 		this._inputElement = document.createElement("input");
 
-		this._value = context.parameters.inputProperty.raw;
+		this._value = context.parameters.inputProperty.raw || "";
 
-		this._inputElement.value = this._value || "";
-		this._context = context;
+		this._inputElement.value = this._value;
 
 		container.appendChild(this._inputElement);
 
 		this._notifyOutputChanged = notifyOutputChanged;
 		this._inputChanged = this.inputChanged.bind(this)
 
-		this._inputElement.addEventListener("change", this._inputChanged);
+		this._inputElement.addEventListener("keyup", this._inputChanged);
 	}
 
 
@@ -47,9 +45,8 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	 */
 	public updateView(context: ComponentFramework.Context<IInputs>): void {
 		// Add code to update control view
-		this._value = context.parameters.inputProperty.raw;
-		this._inputElement.value = this._value || "";
-		this._notifyOutputChanged();
+		this._value = context.parameters.inputProperty.raw || "";
+		this._inputElement.value = this._value;
 	}
 
 	/** 
@@ -57,12 +54,13 @@ export class PcfNotify implements ComponentFramework.StandardControl<IInputs, IO
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
 	public getOutputs(): IOutputs {
-		return {};
+		return {
+			inputProperty: this._value
+		  };;
 	}
 
 	public inputChanged(evt: Event): void {
 		this._value = this._inputElement.value;
-		this._context.parameters.inputProperty.raw = this._value;
 		this._notifyOutputChanged();
 	}
 
